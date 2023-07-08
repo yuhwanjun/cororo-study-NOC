@@ -4,14 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NOC Day 1</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css">
     <style>
-        *{
-            margin: 0;
-            padding: 0;
+        html, body{
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
         }
         canvas{
-            border: 1px solid black;
-            background-color: blue;
+            background-color: black;
         }
     </style>
 </head>
@@ -20,6 +21,18 @@
     <script>
         const canvas = document.getElementById("canvas");
         const ctx = canvas.getContext('2d');
+        const walkers = [];
+        const maxFrames = 200; // 최대 프레임 수
+
+        let mouseX, mouseY;
+        function getMousePosition(event) {
+            mouseX = event.clientX;
+            mouseY = event.clientY;
+        }
+          
+          // 이벤트 리스너 등록
+        document.addEventListener('mousemove', getMousePosition);
+          
 
         class Walker {
             constructor(){
@@ -28,9 +41,34 @@
             }
             display(){
                 ctx.fillStyle = "white";
-                ctx.fillRect(this.x,this.y,1,1);
+                ctx.fillRect(this.x,this.y,10,10);
             }
             step(){
+                
+                let r = Math.random();
+                if(r < 0.5){ //50%
+                    if(this.x < mouseX){
+                        this.x = this.x + 10;
+                    }else if(this.x > mouseX){
+                        this.x = this.x - 10;
+                    }
+    
+                    if(this.y < mouseY){
+                        this.y = this.y + 10;
+                    }else if(this.y > mouseY){
+                        this.y = this.y - 10;
+                    }
+                }else{
+                    let stepX = Math.floor(Math.random()*3)-1;
+                    let stepY = Math.floor(Math.random()*3)-1;
+    
+                    this.x += stepX*10;
+                    this.y += stepY*10;
+                }
+
+                //마우스가 있는 방향으로 움직일 확률을 50%로 만들기.
+
+                
                 //0,1,2,3 중 랜덤한 숫자 반환
                 // 4가지 방향
                 /*
@@ -66,8 +104,8 @@
                 */
 
                 //0부터 1까지의 숫자를 랜덤으로 만들고, 범위에 따라 확률을 설정하기
+                /*
                 let r = Math.random();
-
                 if(r < 0.4) { //40%
                     this.x++;
                 }else if(r < 0.6) { //20%
@@ -77,16 +115,38 @@
                 } else { //20%
                     this.y--;
                 }
+                */
+
             }
         }
 
-        let w;
         function setup(){
-            w = new Walker();
+            walkers.push(new Walker());
+
+            resizeCanvas();
+
+            // resize 이벤트 리스너 등록
+            window.addEventListener('resize', resizeCanvas);
+        }
+        function resizeCanvas(){
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
         }
         function draw(){
-            w.step();
-            w.display();
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            walkers.forEach((walker) => {
+                walker.display();
+                walker.step();
+            });
+            // 최대 프레임 수를 초과하는 경우 점 제거
+            if (walkers.length > maxFrames) {
+                walkers.shift(); // 가장 오래된 점 제거
+            }
+
+            walkers.push(new Walker());
+
+            
             requestAnimationFrame(draw);
         }
         setup();
