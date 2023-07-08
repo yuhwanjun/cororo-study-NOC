@@ -32,6 +32,8 @@
             }
             step(){
                 //0,1,2,3 중 랜덤한 숫자 반환
+                // 4가지 방향
+                /*
                 let randomInteger = Math.floor(Math.random() * 4);
                 switch (randomInteger) {
                     case 0:
@@ -46,6 +48,34 @@
                     case 3:
                         this.y = this.y - 1;
                         break;
+                } */
+
+                //대각선을 포함한 9가지 방향
+                /*
+                let stepX = Math.floor(Math.random()*3)-1;
+                let stepY = Math.floor(Math.random()*3)-1;
+
+                this.x += stepX;
+                this.y += stepY;
+                */
+
+                //배열에 숫자를 임의로 넣어 확률을 바꾸는 방법
+                /*
+                let randomArr = [1,1,2,3,3];
+                let randomNum = randomArr[Math.floor(Math.random() * randomArr.length)];
+                */
+
+                //0부터 1까지의 숫자를 랜덤으로 만들고, 범위에 따라 확률을 설정하기
+                let r = Math.random();
+
+                if(r < 0.4) { //40%
+                    this.x++;
+                }else if(r < 0.6) { //20%
+                    this.x--;
+                }else if(r < 0.8) { //20%
+                    this.y++;
+                } else { //20%
+                    this.y--;
                 }
             }
         }
