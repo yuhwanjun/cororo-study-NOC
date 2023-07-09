@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOC Day 2</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css">
+    <style>
+        html, body{
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        canvas{
+            background-color: black;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="600px" height="600px"></canvas>
+    <script>
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext('2d');
+
+        //가우시안을 만드는 함수
+        function generateGaussian() {
+            let u = 0, v = 0;
+            while(u === 0) u = Math.random(); // u는 (0,1) 범위의 균일한 난수입니다.
+            while(v === 0) v = Math.random(); // v는 (0,1) 범위의 균일한 난수입니다.
+            let value = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+            return value;
+        }
+
+        class Walker {
+            constructor(){
+                this.x = canvas.width / 2;
+                this.y = canvas.height / 2;
+            }
+            display(){
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 10, 2 * Math.PI, false);
+                ctx.fillStyle = "#ffffff20";
+                ctx.fill();
+            }
+            gaussian(){
+                let valueX = generateGaussian() * 60 + 320;
+                let valueY = generateGaussian() * 60 + 320;
+                this.x = valueX;
+                this.y = valueY;
+            }
+        }
+        function resizeCanvas(){
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        function setup(){
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+        }
+        function draw(){
+            let w = new Walker();
+            w.gaussian();
+            w.display();
+            requestAnimationFrame(draw);
+        }
+        setup();
+        draw();
+
+    </script>
+</body>
+</html>
