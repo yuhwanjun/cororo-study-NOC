@@ -17,10 +17,19 @@
     </style>
 </head>
 <body>
-    <canvas id="canvas" width="600px" height="600px"></canvas>
+    
+    <h1>X 가우시안</h1>
+    <canvas class="canvas-01" width="400px" height="400px"></canvas>
+
+    <h1>XY 가우시안</h1>
+    <canvas class="canvas-02" width="400px" height="400px"></canvas>
+    
     <script>
-        const canvas = document.getElementById("canvas");
-        const ctx = canvas.getContext('2d');
+        const canvas1 = document.querySelector(".canvas-01");
+        const ctx1 = canvas1.getContext('2d');
+        
+        const canvas2 = document.querySelector(".canvas-02");
+        const ctx2 = canvas2.getContext('2d');
 
         //가우시안을 만드는 함수
         function generateGaussian() {
@@ -32,38 +41,45 @@
         }
 
         class Walker {
-            constructor(){
+            constructor(canvas){
                 this.x = canvas.width / 2;
                 this.y = canvas.height / 2;
             }
-            display(){
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, 10, 2 * Math.PI, false);
-                ctx.fillStyle = "#ffffff20";
-                ctx.fill();
+            display(ctx){
+                let context = ctx;
+                context.beginPath();
+                context.arc(this.x, this.y, 5, 2 * Math.PI, false);
+                context.fillStyle = "#ffffff20";
+                context.fill();
             }
-            gaussian(){
-                let valueX = generateGaussian() * 60 + 320;
-                let valueY = generateGaussian() * 60 + 320;
-                this.x = valueX;
-                this.y = valueY;
+            gaussian(_xy){
+                let valueX = generateGaussian() * 60 + 200;
+                let valueY = generateGaussian() * 60 + 200;
+                if(_xy === "x"){
+                    this.x = valueX;
+                }else if(_xy === "y"){
+                    this.y = valueY;
+                }else if(_xy === "xy"){
+                    this.x = valueX;
+                    this.y = valueY;
+                }
+
             }
-        }
-        function resizeCanvas(){
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        function setup(){
-            resizeCanvas();
-            window.addEventListener('resize', resizeCanvas);
         }
         function draw(){
-            let w = new Walker();
-            w.gaussian();
-            w.display();
+            let w1 = new Walker(canvas1);
+            w1.gaussian("x");
+            w1.display(ctx1);
+
+
+            let w2 = new Walker(canvas2);
+            w2.gaussian("xy");
+            w2.display(ctx2);
+
+
+
             requestAnimationFrame(draw);
         }
-        setup();
         draw();
 
     </script>
