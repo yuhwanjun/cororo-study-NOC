@@ -24,13 +24,24 @@
   </head>
   <body>
     <script>
+
       function setup() {
         createCanvas(640, 360);
+        background(220);
       }
+      
+      let tx = 0;
+      let ty = 1000;
 
       function draw() {
-        background(220);
-        let num = randomGaussian(50,15);
+        let nx = noise(tx);
+        let ny = noise(ty);
+        let x = map(nx, 0, 1, 0, width);
+        let y = map(ny, 0, 1, 0, height);
+        circle(x, y, 20);
+
+        tx += 0.01;
+        ty += 0.01;
       }
     </script>
   </body>
