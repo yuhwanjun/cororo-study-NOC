@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NOC Day 6</title>
+    <title>NOC Day 7</title>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css"
@@ -16,6 +16,7 @@
         width: 100%;
         height: 100%;
         overflow: hidden;
+        background-color: black;
         margin: 0;
       }
       canvas {
@@ -25,34 +26,34 @@
   </head>
   <body>
     <script>
-      let mover;
-
       class Mover {
-        constructor(_mv) {
-            this.pos = createVector(random(width),random(height));
-            this.vel = createVector(0,0);
-            this.accel = createVector(0,0);
+        constructor(_x,_y,_topspeed,_size,_ax,_ay){
+          this.pos = createVector(_x, _y); //처음 위치
+          this.vel = createVector(0,0); //더할 속도 값
+          this.accel = createVector(_ax,_ay); //가속도 값
 
-            this.mouse = createVector(mouseX,mouseY);
-            this.dir = p5.Vector.sub(this.mouse, this.pos);
-            
-            this.topspeed = 4;
+          this.topspeed = _topspeed; //최대 속력
+          this.size = _size;
 
-            this.multVel = _mv;
-            this.size = 16;
+          //마우스 사용시
+          this.mouse = createVector(mouseX,mouseY);
+          this.dir = p5.Vector.sub(this.mouse, this.pos);
+          this.multVel = 20;
         }
-        update() {
-            this.mouse = createVector(mouseX,mouseY);
-            this.dir = p5.Vector.sub(this.mouse, this.pos);
-
-            this.dir.normalize();
-            this.dir.mult(this.multVel);
-
-            this.accel = this.dir;
-
+        update(_true) {
+          if(_true){
+            this.useMouse();
+          }
             this.vel.add(this.accel);
             this.vel.limit(this.topspeed);
             this.pos.add(this.vel);
+        }
+        useMouse(){
+          this.mouse = createVector(mouseX,mouseY);
+          this.dir = p5.Vector.sub(this.mouse, this.pos);
+          this.dir.normalize();
+          this.dir.mult(this.multVel);
+          this.accel = this.dir;
         }
         display() {
           stroke(0);
@@ -72,29 +73,21 @@
           }
         }
       }
-
-
-      let movers = new Array(20);
+  
+      let obj01;
 
       function setup() {
         createCanvas(600, 600); // 스케치의 너비와 높이 설정
         smooth();
         background(235);
-
-        for(let i =0; i < movers.length; i++){
-            let _v = 0.5 + 0.1*i;
-            movers[i] = new Mover(_v);
-        }
+        obj01 = new Mover(width/2,height/2,4,16,1,1);
       }
 
       function draw() {
         background(235);
-
-        for(let i = 0; i < movers.length; i++){
-            movers[i].update();
-            movers[i].display();
-            movers[i].checkEdge();
-        }
+        obj01.update();
+        obj01.display();
+        obj01.checkEdge();
       }
     </script>
   </body>
