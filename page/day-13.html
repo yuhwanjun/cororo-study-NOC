@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NOC Day 13</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/addons/p5.sound.min.js"></script>
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        margin: 0;
+      }
+      canvas {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+        let mover;
+        class Mover{
+            constructor(){
+                this.location = createVector(width/2,height/2);
+                this.velocity = createVector();
+                this.acceleration = createVector(1);
+                this.mass= 1;
+
+                this.angle = 0;
+                this.aVelocity = 0;
+                this.aAcceleration = 0.01;
+            }
+            update(){
+                this.velocity.add(this.acceleration);
+                this.location.add(this.velocity);
+
+                this.aAcceleration = this.acceleration.x / 10.0;
+                this.aVelocity += this.aAcceleration;
+
+                this.aVelocity = constrain(this.aVelocity, -0.1, 0.1);
+
+                this.angle += this.aVelocity;
+                //console.log(this.velocity);
+                //this.acceleration.mult(0);
+            }
+            display(){
+                stroke(0);
+                fill(175, 200);
+                rectMode(CENTER);
+
+                push();
+                translate(this.location.x, this.location.y);
+                rotate(this.angle);
+                rect(0, 0, this.mass*16, this.mass*16);
+                pop();
+            }
+        }
+
+      function setup() {
+        createCanvas(600, 600); // 스케치의 너비와 높이 설정
+        smooth();
+        background(235);
+        mover = new Mover();
+      }
+
+      function draw() {
+        background(235);
+        mover.display();
+        mover.update();
+      }
+    </script>
+  </body>
+</html>

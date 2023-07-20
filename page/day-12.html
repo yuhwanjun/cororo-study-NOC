@@ -25,7 +25,7 @@
   </head>
   <body>
     <script>
-      let movers = new Array(50);
+      let movers = new Array(10);
       let att;
 
       class Attractor {
@@ -45,7 +45,6 @@
         }
         attract(_m){
             let force = p5.Vector.sub(this.location, _m.pos);
-            console.log(force)
             let distance = force.mag();
 
             distance = constrain(distance, 5.0, 25.0)
@@ -72,6 +71,7 @@
 
           this.multVel = _mv;
           this.size = 16;
+          this.G = 0.4;
         }
         update() {
             /*
@@ -108,6 +108,19 @@
             this.pos.y = height;
           }
         }
+        attract(_m){
+            let force = p5.Vector.sub(this.pos, _m.pos);
+            let distance = force.mag();
+
+            distance = constrain(distance, 5.0, 25.0)
+
+            force.normalize();
+
+            let strength = (this.G * this.mass * _m.mass) / (distance*distance)
+            force.mult(strength);
+
+            return force;
+        }
       }
       function setup() {
         createCanvas(600, 600); // 스케치의 너비와 높이 설정
@@ -126,8 +139,8 @@
         att.display();
 
         for(let i = 0; i < movers.length; i++){
-            let f = att.attract(movers[i]);
-            movers[i].applyForce(f);
+          let f = att.attract(movers[i]);
+          movers[i].applyForce(f);
             movers[i].update();
             movers[i].display();
             //movers[i].checkEdge();
