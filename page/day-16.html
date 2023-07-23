@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NOC Day 16</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/addons/p5.sound.min.js"></script>
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        margin: 0;
+      }
+      canvas {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+
+        class Oscillator{
+            constructor(i){
+                this.angle = createVector(i);
+                this.velocity = createVector(random(-0.05, 0.05),random(-0.05,0.05));
+                this.amplitude = createVector(random(width/2),random(height/2));
+            }
+            oscillate(){
+                this.angle.add(this.velocity);
+            }
+            display(){
+                let x = sin(this.angle.x) * this.amplitude.x;
+                let y = sin(this.angle.y) * this.amplitude.y;
+
+                push();
+                translate(width/2, height/2);
+                stroke(0);
+                fill(175);
+
+                line(0, 0, x, y);
+                ellipse(x, y, 16, 16);
+                pop();
+            }
+        }
+
+        let os = new Array(40);
+
+      function setup() {
+        createCanvas(600, 600); // 스케치의 너비와 높이 설정
+        for(let i = 0; i < os.length; i++){
+            os[i] = new Oscillator(i);
+        }
+      }
+      let angle = 0;
+      let aVelocity = 0.05;
+
+      function draw() {
+        background(235);
+        let period = 120;
+        let amplitude = 100;
+
+        let x = amplitude * cos(TWO_PI*frameCount/period);
+
+        push()
+        stroke(0);
+        fill(175);
+        translate(width/2, height/2);
+        line(0, 0, x, 0);
+        ellipse(x, 0, 20, 20);
+        pop()
+
+        let x1 = amplitude * cos(angle);
+        angle += aVelocity;
+        
+        push()
+        ellipseMode(CENTER);
+        stroke(0);
+        fill(175);
+        translate(width/2,height/2);
+        line(0, 0, x, 0);
+        ellipse(x, -50, 20, 20);
+        pop();
+
+        for(let i = 0; i < os.length; i++){
+            os[i].display();
+            os[i].oscillate();
+        }
+
+      }
+    </script>
+  </body>
+</html>
