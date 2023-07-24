@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NOC Day 17</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/addons/p5.sound.min.js"></script>
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        margin: 0;
+      }
+      canvas {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+        
+      //let angle = 0;
+      //let angleVel = 0.2;
+      //let amplitude = 100;
+
+        let startAngle = 0;
+        let angleVel = 0.1;
+        
+      function setup() {
+        createCanvas(600, 600); // 스케치의 너비와 높이 설정
+        background(235);
+
+      }
+      
+
+      function draw() {
+        background(235);
+        /*
+        for(let x = 0; x <= width; x+=24){
+            let y = amplitude * sin(angle);
+            ellipse(x, y+height/2,48,48);
+            angle += angleVel;
+        }
+        */
+        startAngle += angleVel;
+        let angle = startAngle;
+
+        for(let x = 0; x<= width; x +=5){
+            let y = map(sin(angle)*cos(sin(angle)), -1, 1, 0, height);
+            stroke(0);
+            strokeWeight(2);
+            ellipse(x,y,48,48);
+            angle += angleVel;
+        }
+        
+      }
+    </script>
+  </body>
+</html>
