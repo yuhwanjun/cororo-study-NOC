@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NOC Day 18</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/addons/p5.sound.min.js"></script>
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        margin: 0;
+      }
+      canvas {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+        let p;
+        let run = true;
+        function setup(){
+            createCanvas(360, 360);
+            p = new Pendulun();
+        }
+        function draw(){
+            background(220);
+            if(run){
+              p.go();
+            }else{
+              p.mouseClick();
+            }
+        }
+        function mousePressed(){
+          run = false;
+        }
+        function mouseReleased(){
+          run = true;
+        }
+        class Pendulun{
+            constructor(){
+                this.angle = PI/2;
+                this.aVelocity = 0.0;
+                this.aAcceleration = 0.0;
+                this.location = createVector();
+                this.origin = createVector(width/2, 100);
+                this.r = 20;
+                this.damping = 0.998;
+            }
+            mouseClick(){
+                this.location = createVector(mouseX,mouseY);
+                this.location.sub(this.origin);
+                this.aVelocity = 0.0;
+                this.aAcceleration = 0.0;
+                this.angle = atan(this.location.x/this.location.y);
+                this.r = this.location.x/ sin(this.angle);
+                this.display();
+            }
+            go(){
+                this.update();
+                this.display();
+            }
+            update(){
+                let gravity = 0.4;
+                this.aAcceleration = (-1 * gravity/this.r)*sin(this.angle);
+                this.aVelocity += this.aAcceleration;
+                this.angle += this.aVelocity;
+
+                this.aVelocity *= this.damping;
+                //this.r += 0.1;
+            }
+            display(){
+                this.location.set(this.r*sin(this.angle), this.r*cos(this.angle), 0);
+                this.location.add(this.origin);
+
+                stroke(0);
+                line(this.origin.x, this.origin.y, this.location.x, this.location.y);
+
+                fill(175);
+                ellipse(this.location.x, this.location.y, 32, 32);
+            }
+        }
+        
+    </script>
+  </body>
+</html>
