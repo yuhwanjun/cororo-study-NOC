@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NOC Day 22</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/addons/p5.sound.min.js"></script>
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        margin: 0;
+      }
+      canvas {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      let particle;
+
+function setup() {
+  createCanvas(640, 360);
+  particle = new Particle(width / 2, 10);
+}
+
+function draw() {
+  background(255);
+  particle.update();
+  particle.show();
+
+  let gravity = createVector(0, 0.1);
+  particle.applyForce(gravity);
+
+  if (particle.isDead()) {
+    particle = new Particle(width / 2, 20);
+    console.log("Particle dead!");
+  }
+}
+
+class Particle {
+  constructor(x,y) {
+    this.position =  createVector(x, y);
+    this.velocity = createVector(random(-1, 1), random(-2, 0));
+    this.acceleration = createVector(0, 0);
+    this.lifespan = 255.0;
+  }
+
+  update() {
+    this.velocity.add(this.acceleration);
+    this.position.add(this.velocity);
+    this.lifespan -= 2.0;
+    this.acceleration.mult(0);
+  }
+
+  show() {
+    stroke(0, this.lifespan);
+    fill(0, this.lifespan);
+    circle(this.position.x, this.position.y, 10);
+  }
+
+  applyForce(force) {
+    this.acceleration.add(force);
+  }
+  isDead() {
+    return (this.lifespan < 0.0);
+  }
+
+}
+    </script>
+  </body>
+</html>
